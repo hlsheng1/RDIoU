@@ -90,7 +90,7 @@ MODEL:
 
     POST_PROCESSING:
         RECALL_THRESH_LIST: [0.3, 0.5, 0.7]
-        SCORE_THRESH: 0.38
+        SCORE_THRESH: 0.3
         OUTPUT_RAW_SCORE: False
 
         EVAL_METRIC: kitti
