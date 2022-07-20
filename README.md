@@ -7,7 +7,8 @@ Abstract: Since Intersection-over-Union (IoU) based optimization maintains the c
 ![RDIoU](IMG/RDIoU_pipline.png) The illustration of RDIoU method. We advocate a Rotation-Decoupled IoU to model the intersection of two rotated 3D bounding boxes. This design is further set as the optimization target to guide the classification and regression learning, respectively.
 
 ### The pretrained models
-- Train on KITTI train set (only car) [Model-car](https://drive.google.com/file/d/1QQEMqOWtLrBj2izDGobA_NIUoVGmh2Eh/view?usp=sharing). 
+- Train on KITTI train set (only car) [Model-car](https://drive.google.com/file/d/1QQEMqOWtLrBj2izDGobA_NIUoVGmh2Eh/view?usp=sharing).
+- More pretrained models are coming soon.
 
 
 ### 1. Recommended Environment
