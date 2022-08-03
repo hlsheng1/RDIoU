@@ -15,7 +15,7 @@ Abstract: Since Intersection-over-Union (IoU) based optimization maintains the c
 
 - Linux (tested on Ubuntu 18.04)
 - Python 3.6+
-- PyTorch 1.1 or higher (tested on PyTorch 1.9)
+- PyTorch 1.1 or higher (tested on PyTorch 1.7)
 - CUDA 9.0 or higher (tested on 11.1)
 
 ### 2. Set the Environment
