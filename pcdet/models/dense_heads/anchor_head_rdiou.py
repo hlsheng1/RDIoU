@@ -39,10 +39,6 @@ class AnchorHeadRDIoU(AnchorHeadTemplate):
             self.conv_dir_cls = None
         self.init_weights()
 
-        if model_cfg.get('requires_grad', False) == True:
-            for p in self.parameters():
-                p.requires_grad = False
-
     def init_weights(self):
         pi = 0.01
         nn.init.constant_(self.conv_cls.bias, -np.log((1 - pi) / pi))
