@@ -8,7 +8,8 @@ Abstract: Since Intersection-over-Union (IoU) based optimization maintains the c
 
 ### The pretrained models
 - Train on KITTI train set (only car) [Model-car](https://drive.google.com/file/d/1QQEMqOWtLrBj2izDGobA_NIUoVGmh2Eh/view?usp=sharing) (Test with score_thre=0.515).
-- More pretrained models are coming soon.
+- Train on KITTI train set (three categories) [Model-3cat](https://drive.google.com/file/d/1G-TGVfJzlWGIO4xsU5ArQhpTWi7U_yBz/view?usp=sharing) (Test with score_thre=0.41).
+- Please email me with the dataset approval if you need the pretrained Waymo model.
 
 
 ### 1. Recommended Environment
