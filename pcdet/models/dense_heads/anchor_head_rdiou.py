@@ -155,12 +155,7 @@ class AnchorHeadRDIoU(AnchorHeadTemplate):
         box_cls_labels_an0[box_cls_labels_an0_tmp2==1] = 1
 
         box_cls_labels = torch.cat([box_cls_labels_an0, box_cls_labels_an1], dim = -1)
-        box_cls_labels = box_cls_labels.view(batch_size, -1)
-
-        positives = box_cls_labels > 0
-        reg_weights = positives.float()
-        pos_normalizer = positives.sum(1, keepdim=True).float()
-        reg_weights /= torch.clamp(pos_normalizer, min=1.0)
+        re_box_cls_labels = box_cls_labels.view(batch_size, -1)
 
         if isinstance(self.anchors, list):
             if self.use_multihead:
@@ -180,32 +175,17 @@ class AnchorHeadRDIoU(AnchorHeadTemplate):
 
         # filter the background.
         with torch.no_grad():
-            sim_iou = box_cls_labels * rdiou.detach()
-        return sim_iou
+            rdiou_guided_cls_labels = re_box_cls_labels * rdiou.detach()
+        return re_box_cls_labels, rdiou_guided_cls_labels
 
 
     def get_rdiou_guided_reg_loss(self):
         box_preds = self.forward_ret_dict['box_preds']
         box_dir_cls_preds = self.forward_ret_dict.get('dir_cls_preds', None)
         box_reg_targets = self.forward_ret_dict['box_reg_targets']
-        box_cls_labels = self.forward_ret_dict['box_cls_labels']
+        box_cls_labels = self.re_box_cls_labels
         batch_size = int(box_preds.shape[0])
-        h = box_preds.shape[1]
-        w = box_preds.shape[2]
-
-        box_cls_labels = box_cls_labels.view(batch_size, h, w, -1)
-        box_cls_labels_an0 = box_cls_labels[:,:,:,0].unsqueeze(-1)
-        box_cls_labels_an1 = box_cls_labels[:,:,:,1].unsqueeze(-1)
-        box_cls_labels_an0_tmp1 = box_cls_labels_an0.roll(shifts = 1, dims = 1)
-        box_cls_labels_an0_tmp2 = box_cls_labels_an0.roll(shifts = -1, dims = 1)
-        box_cls_labels_an1_tmp1 = box_cls_labels_an1.roll(shifts = 1, dims = 2)
-        box_cls_labels_an1_tmp2 = box_cls_labels_an1.roll(shifts = -1, dims = 2)
-        box_cls_labels_an1[box_cls_labels_an1_tmp1==1] = 1
-        box_cls_labels_an1[box_cls_labels_an1_tmp2==1] = 1
-        box_cls_labels_an0[box_cls_labels_an0_tmp1==1] = 1
-        box_cls_labels_an0[box_cls_labels_an0_tmp2==1] = 1
-
-        box_cls_labels = torch.cat([box_cls_labels_an0, box_cls_labels_an1], dim = -1)
+ 
         box_cls_labels = box_cls_labels.view(batch_size, -1)
         positives = box_cls_labels > 0
         reg_weights = positives.float()
@@ -262,7 +242,7 @@ class AnchorHeadRDIoU(AnchorHeadTemplate):
 
     def get_rdiou_guided_cls_loss(self):
         cls_preds = self.forward_ret_dict['cls_preds']
-        box_cls_labels = self.pse_box_cls_labels
+        box_cls_labels = self.rdiou_guided_cls_labels
         batch_size = int(cls_preds.shape[0])
         cared = box_cls_labels >= 0  
         positives = box_cls_labels > 0
@@ -290,7 +270,7 @@ class AnchorHeadRDIoU(AnchorHeadTemplate):
 
 
     def get_loss(self):
-        self.pse_box_cls_labels = self.get_clsreg_targets()
+        self.re_box_cls_labels, self.rdiou_guided_cls_labels = self.get_clsreg_targets()
         box_loss, tb_dict = self.get_rdiou_guided_reg_loss()
         cls_loss, tb_dict_cls = self.get_rdiou_guided_cls_loss()
         tb_dict.update(tb_dict_cls)
