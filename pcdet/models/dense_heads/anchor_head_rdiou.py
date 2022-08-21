@@ -69,12 +69,6 @@ class AnchorHeadRDIoU(AnchorHeadTemplate):
             'cls_loss_func',
             loss_utils.SigmoidQualityFocalClassificationLoss(alpha=0.25, gamma=2.0)
         )
-        reg_loss_name = 'WeightedSmoothL1Loss' if losses_cfg.get('REG_LOSS_TYPE', None) is None \
-            else losses_cfg.REG_LOSS_TYPE
-        self.add_module(
-            'theta_loss_func',
-            getattr(loss_utils, reg_loss_name)(code_weights=losses_cfg.LOSS_WEIGHTS['code_theta_weights'])
-        )
         self.add_module(
             'dir_loss_func',
             loss_utils.WeightedCrossEntropyLoss()
