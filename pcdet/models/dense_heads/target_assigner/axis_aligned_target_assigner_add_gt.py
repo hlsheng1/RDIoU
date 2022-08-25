@@ -202,7 +202,8 @@ class AxisAlignedTargetAssigner(object):
                 torch.arange(num_anchors, device=anchors.device), anchor_to_gt_argmax
             ]
 
-            gt_to_anchor_argmax = torch.from_numpy(anchor_by_gt_overlap.cpu().numpy().argmax(axis=0)).cuda()
+            # gt_to_anchor_argmax = torch.from_numpy(anchor_by_gt_overlap.cpu().numpy().argmax(axis=0)).cuda()
+            gt_to_anchor_argmax = torch.argmax(anchor_by_gt_overlap, dim=0)
             gt_to_anchor_max = anchor_by_gt_overlap[gt_to_anchor_argmax, torch.arange(num_gt, device=anchors.device)]
             empty_gt_mask = gt_to_anchor_max == 0
             gt_to_anchor_max[empty_gt_mask] = -1
