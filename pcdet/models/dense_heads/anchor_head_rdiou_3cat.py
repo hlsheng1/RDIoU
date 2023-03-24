@@ -328,7 +328,7 @@ class AnchorHeadRDIoU_3CAT(AnchorHeadTemplate):
         cls_preds = cls_preds.permute(0, 2, 3, 1).contiguous()  # [N, H, W, C]
         box_preds = box_preds.permute(0, 2, 3, 1).contiguous()  # [N, H, W, C]
 
-	box_preds[...,3:6] = torch.clamp(box_preds[...,3:6], max = 3)
+	box_preds[...,3:6] = torch.clamp(box_preds[...,3:6], max = 3.0)
 
         self.forward_ret_dict['cls_preds'] = cls_preds
         self.forward_ret_dict['box_preds'] = box_preds
